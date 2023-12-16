@@ -42,6 +42,9 @@ class Ui_MainWindow(object):
 
             self.verticalLayout.addLayout(course_layout)
         
+        self.add_course_button = QtWidgets.QPushButton('+ Add Course', self.centralwidget)
+        self.verticalLayout.addWidget(self.add_course_button)
+
         self.calc_button = QtWidgets.QPushButton('Calculate GPA')
         self.verticalLayout.addWidget(self.calc_button)
         self.result_label = QtWidgets.QLabel('')
@@ -81,6 +84,7 @@ class Ui_MainWindow(object):
     
     def event(self):
         self.calc_button.clicked.connect(self.calculate_gpa)
+        self.add_course_button.clicked.connect(self.add_course)
         
     def grade_to_gpa(self, grade):
         if 85 <= grade:
@@ -109,6 +113,26 @@ class Ui_MainWindow(object):
             return 0.0
         else:
             return 0.0
+
+    def add_course(self):
+        course_layout = QtWidgets.QHBoxLayout()
+        grade_label = QtWidgets.QLabel(f'Course {len(self.grades)+1} Percentage Grade:')
+        course_layout.addWidget(grade_label)
+
+        grade_input = QtWidgets.QLineEdit(self.centralwidget)
+        grade_input.setText("85")  # 默认分数
+        course_layout.addWidget(grade_input)
+        self.grades.append(grade_input)
+
+        credit_label = QtWidgets.QLabel('Credit Hours:')
+        course_layout.addWidget(credit_label)
+
+        credit_input = QtWidgets.QLineEdit(self.centralwidget)
+        credit_input.setText("0.5")  # 默认credit
+        course_layout.addWidget(credit_input)
+        self.credits.append(credit_input)
+
+        self.verticalLayout.insertLayout(self.verticalLayout.count()-2, course_layout)
 
 if __name__ == "__main__":
     import sys
