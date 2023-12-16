@@ -64,16 +64,19 @@ class Ui_MainWindow(object):
     def calculate_gpa(self):
         total_gpa = 0
         total_credits = 0
-        for grade, credit in zip(self.grades, self.credits):
-            if grade.text() and credit.text():
-                single_gpa = self.grade_to_gpa(float(grade.text()))
-                total_gpa += single_gpa * float(credit.text())
-                total_credits += float(credit.text())
-        if not total_credits == 0:
-            gpa = total_gpa / total_credits
-        else:
-            gpa = 0.0
-        self.result_label.setText(f"Your GPA is: {gpa:.2f}")
+        try:
+            for grade, credit in zip(self.grades, self.credits):
+                if grade.text() and credit.text():
+                    single_gpa = self.grade_to_gpa(float(grade.text()))
+                    total_gpa += single_gpa * float(credit.text())
+                    total_credits += float(credit.text())
+            if not total_credits == 0:
+                gpa = total_gpa / total_credits
+                self.result_label.setText(f"Your GPA is: {gpa:.2f}")
+            else:
+                self.show_error_message("No credits entered", "Please enter the credit hours for the courses.")
+        except ValueError:
+            self.show_error_message("Invalid input", "Please enter valid numbers for grades and credits.")
     
     def event(self):
         self.calc_button.clicked.connect(self.calculate_gpa)
@@ -126,6 +129,17 @@ class Ui_MainWindow(object):
         self.credits.append(credit_input)
 
         self.verticalLayout.insertLayout(self.verticalLayout.count()-3, course_layout)
+
+    # 错误提示框
+    def show_error_message(self, title, message):
+        msg = QtWidgets.QMessageBox()
+        msg.setWindowTitle(title)  # 标题
+        msg.setText(message) #信息
+        msg.setIcon(QtWidgets.QMessageBox.Critical) #类型 错误
+        msg.addButton(QtWidgets.QMessageBox.Ok)
+
+        msg.exec_()
+
 
 if __name__ == "__main__":
     import sys
