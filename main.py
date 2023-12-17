@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets,QtGui,QtCore
 import sys
-import gpa_cal
+import gpa_cal,Grade_Calculator
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -23,6 +23,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.layout.addLayout(self.horizontalLayout)
         
         self.gpa_cal_button.clicked.connect(self.open_gpa_calc)
+        self.corse_ave_button.clicked.connect(self.open_grad_calc)
 
     def create_menus(self):
         gpa_calc_action = QtWidgets.QAction("GPA cal", self)
@@ -54,7 +55,14 @@ class MainWindow(QtWidgets.QMainWindow):
         
 
         # 将新创建的布局元素添加到 central_widget 的布局中
-        central_layout.insertLayout(0, self.time_layout) 
+        central_layout.insertLayout(0, self.time_layout)
+
+    def open_grad_calc(self):
+        self.gpa_calc_window = Grade_Calculator.MainWindow()
+        self.gpa_calc_window.__init__()
+        self.gpa_calc_window.show()
+        print(1)
+
     
     def open_main_page(self):
         self.setWindowTitle("UTBOX")
