@@ -3,21 +3,14 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget
 
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super(MainWindow, self).__init__()
-        self.setWindowTitle("Grade Calculator")
-        self.resize(800, 300)
-        qr = self.frameGeometry()
-        cp = QDesktopWidget().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
-        self.initUI()
-
-    def initUI(self):
-        self.main_widget = QtWidgets.QWidget(self)
+class GradeCalculator(object):
+    def setupUi(self, MainWindow):
+        
+        self.main_widget = QtWidgets.QWidget(MainWindow)
         self.main_widget.setFocus()
-        self.setCentralWidget(self.main_widget)
+        MainWindow.setCentralWidget(self.main_widget)
+        MainWindow.setWindowTitle("Grade Calculator")
+        
 
         self.vbox = QtWidgets.QVBoxLayout(self.main_widget)
 
@@ -134,8 +127,17 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     import sys
-
+    
     app = QApplication(sys.argv)
-    main_window = MainWindow()
-    main_window.show()
+    win = QMainWindow()
+    win.resize(800, 300)
+    qr = win.frameGeometry()
+    cp = QDesktopWidget().availableGeometry().center()
+    qr.moveCenter(cp)
+    win.move(qr.topLeft())
+    
+    ui = GradeCalculator()
+    ui.setupUi(win)
+    
+    win.show()
     sys.exit(app.exec_())
