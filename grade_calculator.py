@@ -3,28 +3,22 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget
 
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super(MainWindow, self).__init__()
-        self.setWindowTitle("Grade Calculator")
-        self.resize(800, 300)
-        qr = self.frameGeometry()
-        cp = QDesktopWidget().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
-        self.initUI()
-
-    def initUI(self):
-        self.main_widget = QtWidgets.QWidget(self)
+class GradeCalculator(object):
+    def setupUi(self, MainWindow):
+        
+        self.main_widget = QtWidgets.QWidget(MainWindow)
         self.main_widget.setFocus()
-        self.setCentralWidget(self.main_widget)
+        MainWindow.setCentralWidget(self.main_widget)
+        MainWindow.setWindowTitle("Grade Calculator")
+        
 
         self.vbox = QtWidgets.QVBoxLayout(self.main_widget)
 
         self.grades = []
         self.weights = []
-        for i in range(5):
-            self.createOneAssignment(i)
+
+        self.add_grade_button = QtWidgets.QPushButton('+ Add Grade')
+        self.vbox.addWidget(self.add_grade_button)
 
         rbox_layout = QtWidgets.QHBoxLayout()
         self.rbox_cal_final_mark = QtWidgets.QRadioButton("calculate final mark")
@@ -53,11 +47,16 @@ class MainWindow(QMainWindow):
 
         self.events()
 
+        for i in range(5):
+            self.createOneAssignment()
+
     def events(self):
         self.rbox_cal_final_mark.toggled.connect(lambda: self.rboxClick("cfm"))
         self.rbox_cal_exam_mark.toggled.connect(lambda: self.rboxClick("cem"))
         self.cal_buttom.clicked.connect(self.calFinalMark)
+        self.add_grade_button.clicked.connect(self.createOneAssignment)
 
+        
     def rboxClick(self, key):
         if key == "cem":
             self.final_input.setPlaceholderText("Enter expected final grade (%)")
@@ -99,12 +98,14 @@ class MainWindow(QMainWindow):
                 "Invalid input", "Please re-check the grades and weight you entered!"
             )
 
-    def createOneAssignment(self, idx: int):
+    def createOneAssignment(self):
         layout = QtWidgets.QHBoxLayout()
 
         assignment_input = QtWidgets.QLineEdit()
         grade_input = QtWidgets.QLineEdit()
         weight_input = QtWidgets.QLineEdit()
+
+        idx = self.vbox.count() - 5
 
         assignment_input.setPlaceholderText(f"assignment {idx+1}")
         grade_input.setPlaceholderText(f"Grade for assignment {idx+1} (%)")
@@ -117,7 +118,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(grade_input)
         layout.addWidget(weight_input)
 
-        self.vbox.addLayout(layout)
+        self.vbox.insertLayout(idx,layout)
 
         return layout
 
@@ -134,8 +135,17 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     import sys
-
+    
     app = QApplication(sys.argv)
-    main_window = MainWindow()
-    main_window.show()
+    win = QMainWindow()
+    win.resize(800, 300)
+    qr = win.frameGeometry()
+    cp = QDesktopWidget().availableGeometry().center()
+    qr.moveCenter(cp)
+    win.move(qr.topLeft())
+    
+    ui = GradeCalculator()
+    ui.setupUi(win)
+    
+    win.show()
     sys.exit(app.exec_())
