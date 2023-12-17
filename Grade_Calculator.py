@@ -121,10 +121,7 @@ class MainWindow(QMainWindow):
         msg.addButton(QtWidgets.QMessageBox.Ok)
 
         msg.exec_()
-    
-    
         
-
 
 if __name__ == "__main__":
     import sys
