@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets,QtGui,QtCore
 import sys
-import gpa_cal,Grade_Calculator
+import gpa_cal,grade_calculator
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -58,7 +58,7 @@ class MainWindow(QtWidgets.QMainWindow):
         central_layout.insertLayout(0, self.time_layout)
 
     def open_grad_calc(self):
-        self.gpa_calc_window = Grade_Calculator.MainWindow()
+        self.gpa_calc_window = grade_calculator.MainWindow()
         self.gpa_calc_window.__init__()
         self.gpa_calc_window.show()
         print(1)
