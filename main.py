@@ -6,7 +6,13 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("UTBOX")
-        self.setGeometry(100, 100, 800, 600)
+
+        self.resize(800, 300)
+        qr = self.frameGeometry()
+        cp = QtWidgets.QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
         self.open_main_page()
         self.menu_bar = self.menuBar()
         self.create_menus()
