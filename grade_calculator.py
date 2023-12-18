@@ -101,10 +101,11 @@ class GradeCalculator(object):
     def set_placeholder(self, layout, pos):
         for i in range(layout.count()):
             item = layout.itemAt(i).widget()
-            if not isinstance(item, QtWidgets.QPushButton):
-                item.setPlaceholderText(f"{item.objectName()} {pos} (%)")
-            else:
-                item.setText(f"{item.objectName()}")
+            if isinstance(item, QtWidgets.QLineEdit):
+                if str(item.objectName()) != "Assignment":
+                    item.setPlaceholderText(f"{item.objectName()} {pos} (%)")
+                else:
+                    item.setPlaceholderText(f"{item.objectName()} {pos}")
     
     def remove_assignment(self, layout):
         
@@ -114,14 +115,28 @@ class GradeCalculator(object):
                 item.deleteLater()
         self.vbox.removeItem(layout)
         
-        for i in range(self.vbox.count()-5):
-            temp_layout = self.vbox.itemAt(i)
-            self.set_placeholder(temp_layout, i+1)
+        #解决因main.py额外添加一个标题lable导致position错文问题
+        #若直接在本页运行则不错位改占位内容
+        #若非本页运行则错位改占位内容
+        if __name__ == "__main__":
+            for i in range(self.vbox.count()-5):
+                if i < 0:
+                    continue
+                temp_layout = self.vbox.itemAt(i)
+                self.set_placeholder(temp_layout, i+1)
+        else:
+            for i in range(1, self.vbox.count()-5):
+                temp_layout = self.vbox.itemAt(i)
+                self.set_placeholder(temp_layout, i)
             
     
     def createOneAssignment(self):
-        layout = QtWidgets.QHBoxLayout()
 
+        idx = self.vbox.count() - 5
+        
+        layout = QtWidgets.QHBoxLayout()
+        layout.setObjectName(str(idx))
+        
         assignment_input = QtWidgets.QLineEdit()
         assignment_input.setObjectName("Assignment")
         grade_input = QtWidgets.QLineEdit()
@@ -129,8 +144,7 @@ class GradeCalculator(object):
         weight_input = QtWidgets.QLineEdit()
         weight_input.setObjectName("Weight for assignment")
         
-        del_buttom = QtWidgets.QPushButton()
-        del_buttom.setObjectName("X")
+        del_buttom = QtWidgets.QPushButton("X")
 
         self.grades.append(grade_input)
         self.weights.append(weight_input)
@@ -140,7 +154,6 @@ class GradeCalculator(object):
         layout.addWidget(weight_input)
         layout.addWidget(del_buttom)
         
-        idx = self.vbox.count() - 5
         self.set_placeholder(layout, idx+1) 
         del_buttom.clicked.connect(lambda: self.remove_assignment(layout))
         self.vbox.insertLayout(idx,layout)
