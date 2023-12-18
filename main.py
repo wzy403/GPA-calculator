@@ -17,8 +17,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menu_bar = self.menuBar()
         self.create_menus()
 
-        
-
     def create_menus(self):
         gpa_calc_action = QtWidgets.QAction("GPA cal", self)
         gpa_calc_action.triggered.connect(self.open_gpa_calc)
@@ -44,7 +42,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.new_label.setAlignment(QtCore.Qt.AlignCenter)
         self.time_layout.addWidget(self.new_label)
-        # 获取 central_widget 的布局
+        # 获取 central_widget 的布局 
         central_layout = self.centralWidget().layout()
         
 
@@ -75,9 +73,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # 将新创建的布局元素添加到 central_widget 的布局中
         central_layout.insertLayout(0, self.time_layout)
-
-    
-
     
     def open_main_page(self):
         self.setWindowTitle("UTBOX")

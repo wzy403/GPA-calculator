@@ -17,8 +17,14 @@ class GradeCalculator(object):
         self.grades = []
         self.weights = []
 
+        
+        self.hvbox = QtWidgets.QHBoxLayout()
+        self.del_grade_button = QtWidgets.QPushButton('- Del Course')
         self.add_grade_button = QtWidgets.QPushButton('+ Add Grade')
-        self.vbox.addWidget(self.add_grade_button)
+        self.hvbox.addWidget(self.del_grade_button)
+        self.hvbox.addWidget(self.add_grade_button)
+
+        self.vbox.addLayout(self.hvbox)
 
         rbox_layout = QtWidgets.QHBoxLayout()
         self.rbox_cal_final_mark = QtWidgets.QRadioButton("calculate final mark")
@@ -55,6 +61,7 @@ class GradeCalculator(object):
         self.rbox_cal_exam_mark.toggled.connect(lambda: self.rboxClick("cem"))
         self.cal_buttom.clicked.connect(self.calFinalMark)
         self.add_grade_button.clicked.connect(self.createOneAssignment)
+        self.del_grade_button.clicked.connect(self.delateOneAssignment)
 
         
     def rboxClick(self, key):
@@ -121,6 +128,25 @@ class GradeCalculator(object):
         self.vbox.insertLayout(idx,layout)
 
         return layout
+
+    def delateOneAssignment(self):
+        if self.grades:
+            # 获取最后一个课程的layout
+            last_course_layout = self.vbox.itemAt(self.vbox.count() - 6)  
+            
+            # 删除这个layout里的所有内容
+            while last_course_layout.count():
+                item = last_course_layout.takeAt(0)
+                widget = item.widget()
+                if widget:
+                    widget.deleteLater()
+            
+            # 移除这个layout
+            self.vbox.removeItem(last_course_layout)
+
+            # 删除lst中的内容
+            del self.grades[-1]
+            del self.weights[-1]
 
     # 错误提示框
     def show_error_message(self, title, message):

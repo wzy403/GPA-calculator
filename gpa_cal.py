@@ -33,8 +33,14 @@ class GPACalculator(object):
 
             self.verticalLayout.addLayout(course_layout)
         
+        self.hvbox = QtWidgets.QHBoxLayout()
+        self.del_course_button = QtWidgets.QPushButton('- Del Course')
         self.add_course_button = QtWidgets.QPushButton('+ Add Course')
-        self.verticalLayout.addWidget(self.add_course_button)
+
+        self.hvbox.addWidget(self.del_course_button)
+        self.hvbox.addWidget(self.add_course_button)
+        
+        self.verticalLayout.addLayout(self.hvbox)
 
         self.calc_button = QtWidgets.QPushButton('Calculate GPA')
         self.verticalLayout.addWidget(self.calc_button)
@@ -72,6 +78,7 @@ class GPACalculator(object):
     def event(self):
         self.calc_button.clicked.connect(self.calculate_gpa)
         self.add_course_button.clicked.connect(self.add_course)
+        self.del_course_button.clicked.connect(self.del_course)
         
     def grade_to_gpa(self, grade):
         if 85 <= grade:
@@ -100,6 +107,26 @@ class GPACalculator(object):
             return 0.0
         else:
             return 0.0
+
+    def del_course(self):
+        if self.grades:
+            # 获取最后一个课程的layout
+            last_course_layout = self.verticalLayout.itemAt(self.verticalLayout.count() - 4)  
+            
+            # 删除这个layout里的所有内容
+            while last_course_layout.count():
+                item = last_course_layout.takeAt(0)
+                widget = item.widget()
+                if widget:
+                    widget.deleteLater()
+            
+            # 移除这个layout
+            self.verticalLayout.removeItem(last_course_layout)
+
+            # 删除lst中的内容
+            del self.grades[-1]
+            del self.credits[-1]
+
 
     def add_course(self):
         course_layout = QtWidgets.QHBoxLayout()
