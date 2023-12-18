@@ -98,18 +98,39 @@ class GradeCalculator(object):
                 "Invalid input", "Please re-check the grades and weight you entered!"
             )
 
+    def set_placeholder(self, layout, pos):
+        for i in range(layout.count()):
+            item = layout.itemAt(i).widget()
+            if not isinstance(item, QtWidgets.QPushButton):
+                item.setPlaceholderText(f"{item.objectName()} {pos} (%)")
+            else:
+                item.setText(f"{item.objectName()} {pos}")
+    
+    def remove_assignment(self, layout):
+        
+        while layout.count():
+            item = layout.takeAt(0).widget()
+            if item:
+                item.deleteLater()
+        self.vbox.removeItem(layout)
+        
+        for i in range(self.vbox.count()-5):
+            temp_layout = self.vbox.itemAt(i)
+            self.set_placeholder(temp_layout, i+1)
+            
+    
     def createOneAssignment(self):
         layout = QtWidgets.QHBoxLayout()
 
         assignment_input = QtWidgets.QLineEdit()
+        assignment_input.setObjectName("Assignment")
         grade_input = QtWidgets.QLineEdit()
+        grade_input.setObjectName("Grade for assignment")
         weight_input = QtWidgets.QLineEdit()
-
-        idx = self.vbox.count() - 5
-
-        assignment_input.setPlaceholderText(f"assignment {idx+1}")
-        grade_input.setPlaceholderText(f"Grade for assignment {idx+1} (%)")
-        weight_input.setPlaceholderText(f"Weight for assignment {idx+1} (%)")
+        weight_input.setObjectName("Weight for assignment")
+        
+        del_buttom = QtWidgets.QPushButton()
+        del_buttom.setObjectName("Remove assignment")
 
         self.grades.append(grade_input)
         self.weights.append(weight_input)
@@ -117,11 +138,14 @@ class GradeCalculator(object):
         layout.addWidget(assignment_input)
         layout.addWidget(grade_input)
         layout.addWidget(weight_input)
-
+        layout.addWidget(del_buttom)
+        
+        idx = self.vbox.count() - 5
+        self.set_placeholder(layout, idx+1) 
+        del_buttom.clicked.connect(lambda: self.remove_assignment(layout))
         self.vbox.insertLayout(idx,layout)
-
-        return layout
-
+        
+    
     # 错误提示框
     def show_error_message(self, title, message):
         msg = QtWidgets.QMessageBox()
