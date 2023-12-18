@@ -6,8 +6,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("UTBOX")
+        self.load_stylesheet()
 
-        self.resize(800, 300)
+        self.resize(1000, 500)
         qr = self.frameGeometry()
         cp = QtWidgets.QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
@@ -16,24 +17,30 @@ class MainWindow(QtWidgets.QMainWindow):
         self.open_main_page()
         self.menu_bar = self.menuBar()
         self.create_menus()
+        
 
     def create_menus(self):
-        gpa_calc_action = QtWidgets.QAction("GPA cal", self)
-        gpa_calc_action.triggered.connect(self.open_gpa_calc)
+        button_action = QtWidgets.QAction("UT BOX", self)
+        button_action.triggered.connect(self.open_main_page)
+        self.menu_bar.addAction(button_action)
 
-        menu = self.menu_bar.addMenu("Applications")
-        menu.addAction(gpa_calc_action)
+        self.gpa_calc_action = QtWidgets.QAction("GPA cal", self)
+        self.gpa_calc_action.triggered.connect(self.open_gpa_calc)
 
+        self.menu = self.menu_bar.addMenu("Applications")
+        self.menu.addAction(self.gpa_calc_action)
+
+        
     def open_gpa_calc(self):
         self.gpa_calc_window = gpa_cal.GPACalculator()
         self.gpa_calc_window.setupUi(main_window)
 
         self.time_layout = QtWidgets.QHBoxLayout()
 
-        self.leave_button = QtWidgets.QPushButton('Leave')
+        """self.leave_button = QtWidgets.QPushButton('Leave')
         self.leave_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.time_layout.addWidget(self.leave_button)
-        self.leave_button.clicked.connect(self.open_main_page)
+        self.leave_button.clicked.connect(self.open_main_page)"""
         
         self.new_label = QtWidgets.QLabel("Welcome to GPA Calculator", self.centralWidget())
         self.font = QtGui.QFont()
@@ -55,10 +62,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.time_layout = QtWidgets.QHBoxLayout()
 
-        self.leave_button = QtWidgets.QPushButton('Leave')
+        """self.leave_button = QtWidgets.QPushButton('Leave')
         self.leave_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.time_layout.addWidget(self.leave_button)
-        self.leave_button.clicked.connect(self.open_main_page)
+        self.leave_button.clicked.connect(self.open_main_page)"""
         
         self.new_label = QtWidgets.QLabel("Welcome to Grade Calculator", self.centralWidget())
         self.font = QtGui.QFont()
@@ -90,6 +97,12 @@ class MainWindow(QtWidgets.QMainWindow):
         
         self.gpa_cal_button.clicked.connect(self.open_gpa_calc)
         self.corse_ave_button.clicked.connect(self.open_grad_calc)
+
+    def load_stylesheet(self):
+        with open('stylesheets\style.qss', 'r') as file:
+            qss = file.read()
+            self.setStyleSheet(qss)
+
 
 app = QtWidgets.QApplication(sys.argv)
 main_window = MainWindow()

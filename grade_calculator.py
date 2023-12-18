@@ -104,7 +104,7 @@ class GradeCalculator(object):
             if not isinstance(item, QtWidgets.QPushButton):
                 item.setPlaceholderText(f"{item.objectName()} {pos} (%)")
             else:
-                item.setText(f"{item.objectName()} {pos}")
+                item.setText(f"{item.objectName()}")
     
     def remove_assignment(self, layout):
         
@@ -130,7 +130,7 @@ class GradeCalculator(object):
         weight_input.setObjectName("Weight for assignment")
         
         del_buttom = QtWidgets.QPushButton()
-        del_buttom.setObjectName("Remove assignment")
+        del_buttom.setObjectName("X")
 
         self.grades.append(grade_input)
         self.weights.append(weight_input)

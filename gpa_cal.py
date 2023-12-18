@@ -14,25 +14,6 @@ class GPACalculator(object):
         self.grades = []
         self.credits = []    
         
-        for i in range(5):
-            course_layout = QtWidgets.QHBoxLayout()
-            grade_label = QtWidgets.QLabel(f'Course {i+1} Percentage Grade:')
-            course_layout.addWidget(grade_label)
-            grade_input = QtWidgets.QLineEdit(self.centralwidget)
-            grade_input.setText("85") # 默认分数
-            course_layout.addWidget(grade_input)
-            self.grades.append(grade_input)
-            
-            credit_label = QtWidgets.QLabel('Credit Hours:')
-            course_layout.addWidget(credit_label)
-
-            credit_input = QtWidgets.QLineEdit(self.centralwidget)
-            credit_input.setText("0.5")  # 默认credit
-            course_layout.addWidget(credit_input)
-            self.credits.append(credit_input)
-
-            self.verticalLayout.addLayout(course_layout)
-        
         self.hvbox = QtWidgets.QHBoxLayout()
         self.del_course_button = QtWidgets.QPushButton('- Del Course')
         self.add_course_button = QtWidgets.QPushButton('+ Add Course')
@@ -53,6 +34,9 @@ class GPACalculator(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
         self.event()
+
+        for i in range(5):
+           self.add_course()
     
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -138,7 +122,7 @@ class GPACalculator(object):
         course_layout.addWidget(grade_input)
         self.grades.append(grade_input)
 
-        credit_label = QtWidgets.QLabel('Credit Hours:')
+        credit_label = QtWidgets.QLabel('Weight:')
         course_layout.addWidget(credit_label)
 
         credit_input = QtWidgets.QLineEdit(self.centralwidget)
