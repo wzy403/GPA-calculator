@@ -18,6 +18,7 @@ class GradeCalculator(object):
         self.weights = []
 
         self.add_grade_button = QtWidgets.QPushButton('+ Add Grade')
+        self.add_grade_button.setObjectName("Add Grade")
         self.vbox.addWidget(self.add_grade_button)
 
         rbox_layout = QtWidgets.QHBoxLayout()
@@ -45,10 +46,17 @@ class GradeCalculator(object):
         self.result_label = QtWidgets.QLabel()
         self.vbox.addWidget(self.result_label)
 
-        self.events()
-
+        self.check_main = True
         for i in range(5):
             self.createOneAssignment()
+        
+        #解决因main.py额外添加一个标题lable导致position错文问题
+        #若直接在本页运行则不错位改占位(placeholder)内容
+        #若非本页运行则错位改占位(placeholder)内容
+        if __name__ != "__main__":
+            self.check_main = False
+
+        self.events()
 
     def events(self):
         self.rbox_cal_final_mark.toggled.connect(lambda: self.rboxClick("cfm"))
@@ -71,7 +79,11 @@ class GradeCalculator(object):
         try:
             mark_before_exam = 0
             for g, w in zip(self.grades, self.weights):
-                mark_before_exam += float(g.text()) * float(w.text()) / 100
+                grade = g.text()
+                weight = w.text()
+                if grade == "" and weight == "":
+                    continue
+                mark_before_exam += float(grade) * float(weight) / 100
 
             if self.optionChoose == "cem":
                 if float(self.final_grade_weight_input.text()) != 0:
@@ -111,14 +123,15 @@ class GradeCalculator(object):
         
         while layout.count():
             item = layout.takeAt(0).widget()
+            if item in self.grades:
+                self.grades.remove(item)
+            elif item in self.weights:
+                self.weights.remove(item)
             if item:
                 item.deleteLater()
         self.vbox.removeItem(layout)
         
-        #解决因main.py额外添加一个标题lable导致position错文问题
-        #若直接在本页运行则不错位改占位内容
-        #若非本页运行则错位改占位内容
-        if __name__ == "__main__":
+        if self.check_main:
             for i in range(self.vbox.count()-5):
                 if i < 0:
                     continue
@@ -154,10 +167,13 @@ class GradeCalculator(object):
         layout.addWidget(weight_input)
         layout.addWidget(del_buttom)
         
-        self.set_placeholder(layout, idx+1) 
+        if self.check_main:
+            self.set_placeholder(layout, idx+1)
+        else:
+            self.set_placeholder(layout, idx)
+
         del_buttom.clicked.connect(lambda: self.remove_assignment(layout))
         self.vbox.insertLayout(idx,layout)
-        
     
     # 错误提示框
     def show_error_message(self, title, message):
