@@ -89,10 +89,8 @@ class GradeCalculator(object):
                 if float(self.final_grade_weight_input.text()) != 0:
                     result = (
                         (float(self.final_input.text()) - mark_before_exam)
-                        / float(self.final_grade_weight_input.text())
-                        * 100
+                        / (float(self.final_grade_weight_input.text()) / 100)
                     )
-                result = float(self.final_input.text()) - mark_before_exam
                 self.result_label.setText(
                     f"You need to get at least {result:.2f}% on you exam inorder to achieve your expectation."
                 )
