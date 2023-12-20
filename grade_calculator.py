@@ -90,7 +90,7 @@ class GradeCalculator(object):
                     result = (
                         (float(self.final_input.text()) - mark_before_exam)
                         / float(self.final_grade_weight_input.text())
-                        / 100
+                        * 100
                     )
                 result = float(self.final_input.text()) - mark_before_exam
                 self.result_label.setText(
